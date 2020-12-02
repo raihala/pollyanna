@@ -1,1 +1,1 @@
-!!!
+NOTE: You must run with the environment variable `PYTHONHASHSEED=0` for consistent ordering of gift givers + recipients!
