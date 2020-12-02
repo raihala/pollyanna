@@ -3,7 +3,6 @@ import csv
 import datetime
 import sys
 import random
-import smtplib
 
 
 class Person(object):
@@ -98,6 +97,7 @@ def generate_email_attachment(giver, filename=None, reveal_address=False):
 def main(argv=sys.argv):
     parser = argparse.ArgumentParser()
     parser.add_argument('-f', dest='input_file', required=True)
+    parser.add_argument('--reveal-addresses', dest='reveal_addresses', action='store_true')
     args = parser.parse_args(argv[1:])
 
     people = read_data_from_google_form_csv(args.input_file)
@@ -107,7 +107,7 @@ def main(argv=sys.argv):
     write_reference_data(output_data)
 
     for person in people:
-        generate_email_attachment(person, reveal_address=True)
+        generate_email_attachment(person, reveal_address=args.reveal_addresses)
 
 
 if __name__ == "__main__":
