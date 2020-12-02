@@ -1,6 +1,7 @@
 import argparse
 import csv
 import datetime
+import os
 import sys
 import random
 
@@ -65,22 +66,24 @@ def set_gift_giving_order(people):
     people[-1].recipient = people[0]
 
 
-def write_reference_data(rows, filename=None):
+def write_reference_data(rows, filename=None, target_dir=os.getcwd()):
     """
     Writes a CSV file with output that we can reference at our leisure
     """
     filename = filename or f"output_{datetime.datetime.now().strftime('%Y%m%d%H%M%S')}.csv"
+    filepath = os.path.join(target_dir, filename)
     fieldnames = Person.FIELDS
-    with open(filename, 'w', newline='') as f:
+    with open(filepath, 'w', newline='') as f:
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writeheader()
         for row in rows:
             writer.writerow(row)
 
 
-def generate_email_attachment(giver, filename=None, reveal_address=False):
+def write_email_attachment(giver, reveal_address=False, filename=None, target_dir=os.getcwd()):
     filename = filename or giver.email or giver.name
-    with open(filename, 'w') as f:
+    filepath = os.path.join(target_dir, filename)
+    with open(filepath, 'w') as f:
         for key, value in giver.recipient.to_dict().items():
             if key in ['recipient', 'msg_to_lucia', 'reveal_receiving', 'reveal_giving']:
                 # they don't need to know..
@@ -103,11 +106,15 @@ def main(argv=sys.argv):
     people = read_data_from_google_form_csv(args.input_file)
     set_gift_giving_order(people)
 
+    output_dir = 'output'
+    if not os.path.exists(output_dir):
+        os.mkdir(output_dir)
+
     output_data = [p.to_dict() for p in people]
-    write_reference_data(output_data)
+    write_reference_data(output_data, target_dir=output_dir)
 
     for person in people:
-        generate_email_attachment(person, reveal_address=args.reveal_addresses)
+        write_email_attachment(person, reveal_address=args.reveal_addresses, target_dir=output_dir)
 
 
 if __name__ == "__main__":
