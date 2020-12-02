@@ -72,13 +72,17 @@ def set_gift_giving_order(people):
     people[-1].recipient = people[0]
 
 
-def write_reference_data(rows, filename=None, target_dir=os.getcwd()):
+def write_reference_data(rows, target_dir=None, filename=None):
     """
     Writes a CSV file with output that we can reference at our leisure
     """
-    filename = filename or f"output_{datetime.datetime.now().strftime('%Y%m%d%H%M%S')}.csv"
-    filepath = os.path.join(target_dir, filename)
     fieldnames = Person.FIELDS
+
+    target_dir = target_dir or os.getcwd()
+    timestamp = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
+    filename = filename or f"output_{timestamp}.csv"
+    filepath = os.path.join(target_dir, filename)
+
     with open(filepath, 'w', newline='') as f:
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writeheader()
@@ -86,9 +90,11 @@ def write_reference_data(rows, filename=None, target_dir=os.getcwd()):
             writer.writerow(row)
 
 
-def write_email_attachment(giver, reveal_address=False, filename=None, target_dir=os.getcwd()):
+def write_email_attachment(giver, reveal_address=False, target_dir=None, filename=None):
+    target_dir = target_dir or os.getcwd()
     filename = filename or giver.email or giver.name
     filepath = os.path.join(target_dir, filename)
+
     with open(filepath, 'w') as f:
         for key, value in giver.recipient.to_dict().items():
             if key in ['recipient', 'msg_to_lucia', 'reveal_receiving', 'reveal_giving']:
