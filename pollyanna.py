@@ -1,3 +1,9 @@
+"""
+TODO: Currently this won't work quite right because if you run once
+without revealing addresses, and then again WITH revealing addresses,
+it will re-generate a new random order the second time, which is unhelpful.
+"""
+
 import argparse
 import csv
 import datetime
