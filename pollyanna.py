@@ -111,6 +111,14 @@ def write_email_attachment(giver, reveal_address=False, target_dir=None, filenam
     filepath = os.path.join(target_dir, filename)
 
     with open(filepath, 'w') as f:
+        if not giver.knows_recipient_identity():
+            if reveal_address:
+                f.write("Your anonymous recipient's address is now included below!\n\n")
+            else:
+                f.write(
+                    'You do NOT know who your giftee is! Hee hee. Message Lucia for '
+                    'their address when you are ready to send your gift!\n\n'
+                )
         for key, value in giver.recipient.to_dict().items():
             if key in ['recipient_name', 'msg_to_lucia', 'reveal_receiving', 'reveal_giving']:
                 # they don't need to know..
@@ -124,7 +132,22 @@ def write_email_attachment(giver, reveal_address=False, target_dir=None, filenam
             f.write(f'{Person.FIELD_DESCRIPTIONS[key]}: {value}\n')
 
 
+def write_messages_to_lucia(people, target_dir=None, filename=None):
+    target_dir = target_dir or os.getcwd()
+    filename = filename or 'messages_to_Lucia.txt'
+    filepath = os.path.join(target_dir, filename)
+
+    with open(filepath, 'w') as f:
+        f.write('Oh yeah!!!\n\n')
+        for person in people:
+            f.write(f'{person.name}: {person.msg_to_lucia}\n')
+        f.write('\n\ni love you Lucia!!!! -puppy\n')
+
+
 def main(argv=sys.argv):
+    if os.environ.get('PYTHONHASHSEED', '') != '0':
+        raise RuntimeError('You gotta set PYTHONHASHSEED=0 in the environment!!')
+
     parser = argparse.ArgumentParser()
     parser.add_argument('-f', dest='input_file', required=True)
     parser.add_argument('--reveal-addresses', dest='reveal_addresses', action='store_true')
@@ -139,7 +162,7 @@ def main(argv=sys.argv):
 
     output_data = [p.to_dict() for p in people]
     write_reference_data(output_data, target_dir=output_dir)
-
+    write_messages_to_lucia(people, target_dir=output_dir)
     for person in people:
         write_email_attachment(person, reveal_address=args.reveal_addresses, target_dir=output_dir)
 
