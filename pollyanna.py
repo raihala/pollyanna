@@ -6,10 +6,23 @@ import sys
 
 
 class Person(object):
-    FIELDS = ['name', 'email', 'favorite_color', 'address', 'restrictions', 'gus_or_gary',
-              'functional_or_frivolous', 'keepsake_or_consumable', 'tshirt_size_etc',
-              'interview_responses', 'msg_to_santa', 'msg_to_lucia', 'reveal_receiving',
-              'reveal_giving']
+    FIELD_DESCRIPTIONS = {
+        'name': 'YOUR GIFTEE IS',
+        'email': 'THEIR EMAIL IS',
+        'address': 'SEND YOUR GIFT TO',
+        'favorite_color': 'WHAT ARE THEIR FAVORITE COLORS/PATTERNS?',
+        'restrictions': 'ANY ALLERGIES / RESTRICTIONS?',
+        'gus_or_gary': 'ARE THEY A GRUMPY GUS OR A GOOFY GARY?',
+        'functional_or_frivolous': 'ARE THEY FUNCTIONAL OR FRIVOLOUS?',
+        'keepsake_or_consumable': 'DO THEY PREFER KEEPSAKES OR CONSUMABLES?',
+        'tshirt_size_etc': 'ANY T-SHIRT SIZES, ETC?',
+        'interview_responses': 'HOW DID THEY RESPOND TO THE CHILL INTERVIEWER?',
+        'msg_to_santa': 'THEIR MESSAGE TO YOU',
+        'msg_to_lucia': None,
+        'reveal_receiving': None,
+        'reveal_giving': None
+    }
+    FIELDS = list(FIELD_DESCRIPTIONS.keys())
 
     def __init__(self, **kwargs):
         # these fields are easy to handle
@@ -108,7 +121,7 @@ def write_email_attachment(giver, reveal_address=False, target_dir=None, filenam
             if key == 'address' and not giver.knows_recipient_identity() and not reveal_address:
                 # they don't need to know...yet
                 continue
-            f.write(f'{key}: {value}\n')
+            f.write(f'{Person.FIELD_DESCRIPTIONS[key]}: {value}\n')
 
 
 def main(argv=sys.argv):
