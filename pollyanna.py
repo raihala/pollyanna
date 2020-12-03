@@ -6,7 +6,7 @@ import sys
 
 
 class Person(object):
-    FIELDS = ['name', 'email', 'favorite_color', 'address', 'restrictions',
+    FIELDS = ['name', 'email', 'favorite_color', 'address', 'restrictions', 'gus_or_gary',
               'functional_or_frivolous', 'keepsake_or_consumable', 'tshirt_size_etc',
               'interview_responses', 'msg_to_santa', 'msg_to_lucia', 'reveal_receiving',
               'reveal_giving']
@@ -39,6 +39,8 @@ class Person(object):
                 self.reveal_receiving = value.startswith('YES')
             elif key.startswith('Opt-in name reveal - GIVING'):
                 self.reveal_giving = value.startswith('YES')
+            elif key.startswith('Are you a GRUMPY GUS'):
+                self.gus_or_gary = value
 
         # populated later!
         self.recipient = None
