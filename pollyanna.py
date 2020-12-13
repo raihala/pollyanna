@@ -107,7 +107,7 @@ def write_reference_data(rows, target_dir=None, filename=None):
 
 def write_email_attachment(giver, reveal_address=False, target_dir=None, filename=None):
     target_dir = target_dir or os.getcwd()
-    filename = filename or giver.email or giver.name
+    filename = f'{filename or giver.email or giver.name}{"_address" if reveal_address else ""}.txt'
     filepath = os.path.join(target_dir, filename)
 
     with open(filepath, 'w') as f:
