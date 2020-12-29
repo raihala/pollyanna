@@ -28,7 +28,6 @@ class Person(object):
         # these fields are easy to handle
         self.name = kwargs['Name']
         self.email = kwargs['Email']
-        self.favorite_color = kwargs.get('Favorite color?', '')
 
         # these ones are a little harder, but all pretty similar
         for key, value in kwargs.items():
@@ -48,12 +47,14 @@ class Person(object):
                 self.msg_to_santa = value
             elif key.startswith('General message for ME'):
                 self.msg_to_lucia = value
+            elif key.startswith('Favorite colors'):
+                self.favorite_color = value
+            elif key.startswith('Are you a GRUMPY GUS'):
+                self.gus_or_gary = value
             elif key.startswith('Opt-in name reveal - RECEIVING'):
                 self.reveal_receiving = value.startswith('YES')
             elif key.startswith('Opt-in name reveal - GIVING'):
                 self.reveal_giving = value.startswith('YES')
-            elif key.startswith('Are you a GRUMPY GUS'):
-                self.gus_or_gary = value
 
         # populated later!
         self.recipient = None
